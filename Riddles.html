@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="One eye.jpg" type="image/x-icon">
+  <title>Games | OneEye</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* CSS Variables for easy theme management */
+    :root {
+      --background-color: #121212;
+      --surface-color: #1E1E1E;
+      --primary-accent: #6200EE;
+      --primary-accent-hover: #7F39FB;
+      --text-primary: #FFFFFF;
+      --text-secondary: #B0B0B0;
+      --font-family: 'Poppins', sans-serif;
+      --success-color: #03DAC5;
+      --error-color: #CF6679;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--background-color);
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* --- Navigation --- */
+    nav {
+      padding: 1.5rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(30, 30, 30, 0.7);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    
+    .nav-logo a {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        text-decoration: none;
+    }
+    
+    .nav-logo a span { color: var(--primary-accent); }
+
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 400;
+      padding: 8px 0;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: var(--primary-accent);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--text-primary); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    /* Hamburger Menu */
+    .hamburger { display: none; }
+
+    /* --- Main Content --- */
+    .container {
+      flex-grow: 1;
+      padding: 50px 20px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .header-content {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .main-heading {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, var(--primary-accent), var(--primary-accent-hover));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .subtitle {
+        font-size: clamp(1rem, 2.5vw, 1.25rem);
+        color: var(--text-secondary);
+        font-weight: 300;
+    }
+    
+    /* --- Riddle Game Styling --- */
+    .game-container {
+      background: var(--surface-color);
+      padding: 2rem 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      position: relative; /* For confetti */
+      overflow: hidden; /* For confetti */
+    }
+    
+    .game-title {
+        color: var(--text-primary);
+        font-weight: 600;
+        margin-bottom: 2rem;
+        font-size: 1.75rem;
+    }
+
+    .riddle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+      min-height: 50px; /* Prevent layout shift */
+    }
+
+    .answer-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      padding: 1rem;
+      background-color: var(--primary-accent);
+      color: var(--text-primary);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-accent-hover);
+      transform: translateY(-3px);
+    }
+    .btn:disabled {
+        background-color: #333;
+        color: #777;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .message {
+      font-size: 1.2rem;
+      font-weight: 600;
+      min-height: 2rem; /* Prevent layout shift */
+    }
+    .message.correct { color: var(--success-color); }
+    .message.wrong { color: var(--error-color); }
+
+    /* --- Confetti Animation --- */
+    .confetti {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: var(--primary-accent);
+        opacity: 0;
+        animation: confetti-fall 1.5s ease-out forwards;
+    }
+    @keyframes confetti-fall {
+        0% { transform: translateY(-100px) rotateZ(0deg); opacity: 1; }
+        100% { transform: translateY(100vh) rotateZ(720deg); opacity: 0; }
+    }
+
+    /* --- Footer --- */
+    footer {
+      background: var(--surface-color);
+      color: var(--text-secondary);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: auto;
+    }
+
+    footer a { color: var(--primary-accent); text-decoration: none; font-weight: 600; }
+    footer a:hover { color: var(--primary-accent-hover); }
+    
+    /* --- Responsive Design --- */
+    @media screen and (max-width: 768px) {
+      .nav-links {
+        position: fixed; top: 0; right: -100%; height: 100vh;
+        width: 70%; max-width: 300px; flex-direction: column;
+        justify-content: center; align-items: center; gap: 2.5rem;
+        background: var(--surface-color);
+        transition: right 0.4s ease-in-out; z-index: 1001;
+      }
+      .nav-links.active { right: 0; }
+      .nav-links a { font-size: 1.2rem; }
+      .hamburger {
+        display: flex; flex-direction: column; justify-content: space-around;
+        width: 28px; height: 24px; cursor: pointer; z-index: 1002;
+      }
+      .hamburger div {
+        width: 28px; height: 3px; background-color: var(--text-primary);
+        border-radius: 5px; transition: all 0.3s ease;
+      }
+      .nav-toggle.active .line1 { transform: rotate(45deg) translate(6px, 6px); }
+      .nav-toggle.active .line2 { opacity: 0; }
+      .nav-toggle.active .line3 { transform: rotate(-45deg) translate(6px, -6px); }
+      .answer-buttons { grid-template-columns: 1fr; }
+      .game-container { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo"><a href="Index.html">One<span>Eye</span></a></div>
+    <div class="nav-links">
+      <a href="Index.html">Home</a>
+      <a href="About.html">About</a>
+      <a href="Gallery.html">Gallery</a>
+      <a href="Contact.html">Contact Us</a>
+      <a href="Games.html" class="active">Games</a>
+      <a href="Blog.html">Blog</a>
+      <a href="News.html">News</a>
+    </div>
+    <div class="hamburger nav-toggle">
+      <div class="line1"></div><div class="line2"></div><div class="line3"></div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="header-content">
+        <h1 class="main-heading">Riddle Challenge</h1>
+        <p class="subtitle">Test your wit and see if you can solve them all!</p>
+    </div>
+
+    <div class="game-container" id="game-container">
+      <h2 class="game-title">Riddle Time!</h2>
+      <div class="riddle" id="riddle">Loading...</div>
+      <div class="answer-buttons" id="answer-buttons"></div>
+      <div class="message" id="message"></div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 <a href="#">OneEye</a>. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    const riddles = [
+        { question: "What has hands but can’t clap?", options: ["Clock", "Tree", "Human", "Car"], answer: "Clock" },
+        { question: "What goes up but never comes down?", options: ["Age", "Ball", "Smoke", "Rocket"], answer: "Age" },
+        { question: "What has keys but can’t open locks?", options: ["Piano", "Computer", "Map", "Car"], answer: "Piano" },
+        { question: "What has a head and a tail, but no body?", options: ["Coin", "Snake", "Human", "Scissors"], answer: "Coin" },
+        { question: "I am tall when I am young, and short when I am old. What am I?", options: ["Candle", "Tree", "Building", "Pen"], answer: "Candle" },
+        { question: "What travels the world while staying in a corner?", options: ["Stamp", "Book", "Bird", "Plane"], answer: "Stamp" },
+        { question: "What comes once in a minute, twice in a moment, but never in a thousand years?", options: ["The letter 'M'", "The letter 'T'", "The letter 'E'", "The letter 'R'"], answer: "The letter 'M'" },
+        { question: "What has a neck but no head?", options: ["Bottle", "Person", "Tree", "Animal"], answer: "Bottle" },
+        { question: "What can be broken but never held?", options: ["Promise", "Stone", "Glass", "Toy"], answer: "Promise" },
+        { question: "What is full of holes but still holds water?", options: ["Sponge", "Rock", "Towel", "Net"], answer: "Sponge" },
+        { question: "What gets wetter as it dries?", options: ["Towel", "Spade", "Shirt", "Brush"], answer: "Towel" },
+        { question: "What can you catch, but not throw?", options: ["A cold", "A fish", "A ball", "An apple"], answer: "A cold" },
+        { question: "What is black when it’s clean and white when it’s dirty?", options: ["Chalkboard", "Piano", "Chair", "T-shirt"], answer: "Chalkboard" },
+        { question: "What can run but never walks?", options: ["A river", "A human", "A cat", "A car"], answer: "A river" },
+        { question: "What can be cracked, made, told, and played?", options: ["A joke", "A glass", "A promise", "A box"], answer: "A joke" },
+        { question: "What has a bark but no bite?", options: ["A tree", "A dog", "A seal", "A bush"], answer: "A tree" },
+        { question: "What grows when it eats, but dies when it drinks?", options: ["Fire", "A plant", "A pet", "A person"], answer: "Fire" },
+        { question: "What can fill a room but takes up no space?", options: ["Light", "Air", "Sound", "Water"], answer: "Light" },
+        { question: "What has many teeth but can’t bite?", options: ["A comb", "A saw", "A shark", "A monster"], answer: "A comb" }
+    ];
+
+    let currentRiddleIndex = 0;
+    const riddleTextEl = document.getElementById("riddle");
+    const answerButtonsEl = document.getElementById("answer-buttons");
+    const messageEl = document.getElementById("message");
+    const gameContainer = document.getElementById("game-container");
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function startGame() {
+      shuffleArray(riddles);
+      currentRiddleIndex = 0;
+      showRiddle();
+    }
+
+    function showRiddle() {
+      const riddle = riddles[currentRiddleIndex];
+      riddleTextEl.textContent = riddle.question;
+      answerButtonsEl.innerHTML = '';
+      messageEl.textContent = '';
+      messageEl.className = 'message';
+
+      riddle.options.forEach(option => {
+        const button = document.createElement("button");
+        button.textContent = option;
+        button.classList.add("btn");
+        button.onclick = () => checkAnswer(option, riddle.answer);
+        answerButtonsEl.appendChild(button);
+      });
+    }
+    
+    function createConfetti() {
+        for (let i = 0; i < 30; i++) {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.style.left = `${Math.random() * 100}%`;
+            confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
+            confetti.style.animationDelay = `${Math.random() * 0.5}s`;
+            gameContainer.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 1500);
+        }
+    }
+
+    function checkAnswer(selected, correctAnswer) {
+      const buttons = answerButtonsEl.querySelectorAll('.btn');
+      buttons.forEach(button => button.disabled = true);
+
+      if (selected === correctAnswer) {
+        messageEl.textContent = "Correct! 🎉";
+        messageEl.classList.add('correct');
+        createConfetti();
+        setTimeout(nextRiddle, 1500);
+      } else {
+        messageEl.textContent = "Not quite! Try the next one.";
+        messageEl.classList.add('wrong');
+        setTimeout(nextRiddle, 1500);
+      }
+    }
+
+    function nextRiddle() {
+      currentRiddleIndex++;
+      if (currentRiddleIndex < riddles.length) {
+        showRiddle();
+      } else {
+        messageEl.textContent = "Game Over! You've faced all the riddles.";
+        messageEl.classList.remove('correct', 'wrong');
+        answerButtonsEl.innerHTML = '<button class="btn" onclick="startGame()">Play Again?</button>';
+      }
+    }
+
+    // --- Mobile Navigation Toggle ---
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    if (navToggle) {
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            navToggle.classList.toggle('active');
+        });
+    }
+
+    // Start the game
+    startGame();
+  </script>
+
+</body>
+</html>

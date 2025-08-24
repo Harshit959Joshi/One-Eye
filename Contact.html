@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="One eye.jpg" type="image/x-icon">
+  <title>Contact Us | OneEye</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* CSS Variables for easy theme management */
+    :root {
+      --background-color: #121212;
+      --surface-color: #1E1E1E;
+      --primary-accent: #6200EE;
+      --primary-accent-hover: #7F39FB;
+      --text-primary: #FFFFFF;
+      --text-secondary: #B0B0B0;
+      --font-family: 'Poppins', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--background-color);
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* --- Navigation --- */
+    nav {
+      padding: 1.5rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(30, 30, 30, 0.7);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    
+    .nav-logo a {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    
+    .nav-logo a span {
+      color: var(--primary-accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 400;
+      padding: 8px 0;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: var(--primary-accent);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--text-primary);
+    }
+
+    .nav-links a:hover::after, .nav-links a.active::after {
+      width: 100%;
+    }
+
+    /* Hamburger Menu Icon */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 28px;
+      height: 24px;
+      cursor: pointer;
+      z-index: 1002;
+    }
+
+    .hamburger div {
+      width: 28px;
+      height: 3px;
+      background-color: var(--text-primary);
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-toggle.active .line1 {
+      transform: rotate(45deg) translate(6px, 6px);
+    }
+    .nav-toggle.active .line2 {
+      opacity: 0;
+    }
+    .nav-toggle.active .line3 {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    /* --- Main Content --- */
+    .container {
+      flex-grow: 1;
+      text-align: center;
+      padding: 50px 20px;
+    }
+
+    .main-heading {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, var(--primary-accent), var(--primary-accent-hover));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--text-secondary);
+      font-weight: 300;
+      margin-bottom: 3rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+
+    /* --- Contact Page Specifics --- */
+    .contact-form {
+        max-width: 700px;
+        margin: 0 auto;
+        background: var(--surface-color);
+        padding: 2.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        width: 100%;
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+        width: 100%;
+        padding: 1rem;
+        background: var(--background-color);
+        border: 2px solid #333;
+        border-radius: 8px;
+        color: var(--text-primary);
+        font-family: var(--font-family);
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+        outline: none;
+        border-color: var(--primary-accent);
+    }
+    
+    .contact-form textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        background: var(--primary-accent);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .submit-btn:hover {
+        background: var(--primary-accent-hover);
+        transform: translateY(-2px);
+    }
+    
+    #form-message {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 500;
+        display: none; /* Hidden by default */
+    }
+    #form-message.success {
+        background-color: rgba(26, 115, 232, 0.2);
+        color: #8ab4f8;
+    }
+
+
+    /* --- Footer --- */
+    footer {
+      background: var(--surface-color);
+      color: var(--text-secondary);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    footer a {
+      color: var(--primary-accent);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: var(--primary-accent-hover);
+    }
+    
+    /* --- Responsive Design --- */
+    @media screen and (max-width: 768px) {
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 70%;
+        max-width: 300px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2.5rem;
+        background: var(--surface-color);
+        transition: right 0.4s ease-in-out;
+        z-index: 1001;
+      }
+
+      .nav-links.active {
+        right: 0;
+      }
+      
+      .nav-links a {
+        font-size: 1.2rem;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+      
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+    }
+      #form-message.success {
+      color: green;
+      }
+
+      #form-message.error {
+       color: red;
+      }
+
+
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">
+      <a href="Index.html">One<span>Eye</span></a>
+    </div>
+    <div class="nav-links">
+      <a href="Index.html">Home</a>
+      <a href="About.html">About</a>
+      <a href="Gallery.html">Gallery</a>
+      <a href="Contact.html" class="active">Contact Us</a>
+      <a href="Games.html">Games</a>
+      <a href="Blog.html">Blog</a>
+      <a href="News.html">News</a>
+    </div>
+    <div class="hamburger nav-toggle">
+      <div class="line1"></div>
+      <div class="line2"></div>
+      <div class="line3"></div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1 class="main-heading">Get In Touch</h1>
+    <p class="subtitle">
+      Have a question or feedback? We'd love to hear from you. Fill out the form below, and our team will get back to you as soon as possible.
+    </p>
+
+   <div class="contact-form">
+       <form id="contactForm" action="https://formspree.io/f/xldwrrgo" method="POST">
+       <div class="form-row">
+        <div class="form-group">
+         <input type="text" id="name" name="name" placeholder="Your Name" required>
+        </div>
+        <div class="form-group">
+          <input type="email" id="email" name="email" placeholder="Your Email" required>
+        </div>
+      </div>
+      <div class="form-group full-width">
+      <textarea id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
+      </div>
+      <div class="form-group full-width">
+      <button type="submit" class="submit-btn">Send Message</button>
+      </div>
+     </form>
+     <div id="form-message"></div>
+    </div>
+
+
+  <footer>
+    <p>&copy; 2025 <a href="#">OneEye</a>. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    // --- Mobile Navigation Toggle ---
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    navToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        navToggle.classList.toggle('active');
+    });
+    
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                navToggle.classList.remove('active');
+            }
+        });
+    });
+
+    const contactForm = document.getElementById('contactForm');
+  const formMessage = document.getElementById('form-message');
+
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(contactForm);
+
+    try {
+      const response = await fetch(contactForm.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        formMessage.textContent = "Thank you for your message! We'll be in touch soon.";
+        formMessage.className = 'success';
+        formMessage.style.display = 'block';
+        contactForm.reset();
+
+        setTimeout(() => {
+          formMessage.style.display = 'none';
+        }, 5000);
+      } else {
+        formMessage.textContent = "Oops! Something went wrong. Please try again.";
+        formMessage.className = 'error';
+        formMessage.style.display = 'block';
+      }
+    } catch (error) {
+      formMessage.textContent = "Network error. Please check your connection.";
+      formMessage.className = 'error';
+      formMessage.style.display = 'block';
+    }
+  });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="One eye.jpg" type="image/x-icon">
+  <title>Blog | OneEye</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+  </script>
+  
+  <style>
+    /* CSS Variables for easy theme management */
+    :root {
+      --background-color: #121212;
+      --surface-color: #1E1E1E;
+      --primary-accent: #6200EE;
+      --primary-accent-hover: #7F39FB;
+      --text-primary: #FFFFFF;
+      --text-secondary: #B0B0B0;
+      --font-family: 'Poppins', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--background-color);
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden; /* Prevents horizontal scroll */
+    }
+
+    /* --- Navigation --- */
+    nav {
+      padding: 1.5rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(30, 30, 30, 0.7);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    
+    .nav-logo a {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        text-decoration: none;
+    }
+    
+    .nav-logo a span {
+        color: var(--primary-accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 400;
+      padding: 8px 0;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: var(--primary-accent);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--text-primary);
+    }
+
+    .nav-links a:hover::after, .nav-links a.active::after {
+      width: 100%;
+    }
+
+    /* Hamburger Menu Icon */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 28px;
+      height: 24px;
+      cursor: pointer;
+      z-index: 1002; /* Above overlay */
+    }
+
+    .hamburger div {
+      width: 28px;
+      height: 3px;
+      background-color: var(--text-primary);
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+    
+    /* Close Icon (transformed from hamburger) */
+    .nav-toggle.active .line1 {
+      transform: rotate(45deg) translate(6px, 6px);
+    }
+    .nav-toggle.active .line2 {
+      opacity: 0;
+    }
+    .nav-toggle.active .line3 {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    /* --- Main Content --- */
+    .container {
+      flex-grow: 1;
+      padding: 50px 20px;
+      width: 100%;
+    }
+    
+    .header-content {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+      .main-heading {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 700;
+        margin-bottom: 1rem;
+           background: linear-gradient(90deg, var(--primary-accent), var(--primary-accent-hover));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+  /* For better browser support, add the standard property too */
+        background-clip: text;
+    }
+    
+    .subtitle {
+        font-size: clamp(1rem, 2.5vw, 1.25rem);
+        color: var(--text-secondary);
+        font-weight: 300;
+    }
+    
+    /* --- Blog Section Styling --- */
+    .blog-posts {
+      max-width: 800px;
+      margin: 0 auto;
+      display: grid;
+      gap: 2rem;
+    }
+
+    .blog-post {
+      background-color: var(--surface-color);
+      padding: 2.5rem;
+      border-radius: 8px;
+      border-left: 4px solid var(--primary-accent);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .blog-post h3 {
+      font-size: 1.75rem;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    .blog-post h4 {
+        font-size: 1.2rem;
+        color: var(--primary-accent-hover);
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+
+    .blog-post p {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+    
+    .blog-post ul {
+        list-style-position: inside;
+        padding-left: 1rem;
+        margin: 1.5rem 0;
+        color: var(--text-secondary);
+    }
+    
+    .blog-post li {
+        margin-bottom: 0.75rem;
+        line-height: 1.7;
+    }
+
+    .blog-post em {
+        color: var(--primary-accent);
+        font-style: normal;
+        font-weight: 600;
+    }
+    
+    .formula {
+        background-color: #111;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+        overflow-x: auto;
+    }
+
+    /* --- Footer --- */
+    footer {
+      background: var(--surface-color);
+      color: var(--text-secondary);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: auto;
+    }
+
+    footer a {
+      color: var(--primary-accent);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+        color: var(--primary-accent-hover);
+    }
+    
+    /* --- Responsive Design --- */
+    @media screen and (max-width: 768px) {
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 70%;
+        max-width: 300px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2.5rem;
+        background: var(--surface-color);
+        transition: right 0.4s ease-in-out;
+        z-index: 1001;
+      }
+
+      .nav-links.active { right: 0; }
+      
+      .nav-links a { font-size: 1.2rem; }
+      .hamburger { display: flex; }
+      .blog-post { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">
+      <a href="Index.html">One<span>Eye</span></a>
+    </div>
+    <div class="nav-links">
+      <a href="Index.html">Home</a>
+      <a href="About.html">About</a>
+      <a href="Gallery.html">Gallery</a>
+      <a href="Contact.html">Contact Us</a>
+      <a href="Games.html">Games</a>
+      <a href="Blog.html" class="active">Blog</a>
+      <a href="News.html">News</a>
+    </div>
+    <div class="hamburger nav-toggle">
+      <div class="line1"></div>
+      <div class="line2"></div>
+      <div class="line3"></div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="header-content">
+        <h1 class="main-heading">OneEye Blog</h1>
+        <p class="subtitle">Explore, Discover, and Enjoy</p>
+    </div>
+
+    <div class="blog-posts">
+      <div class="blog-post">
+        <h3>What is OneEye?</h3>
+        <p>
+          OneEye is not just a platform; it’s an experience! We bring together creativity, innovation, and entertainment, all from a fresh perspective. Learn more about how we’re shaping the future of digital content with a single eye open!
+        </p>
+      </div>
+
+      <div class="blog-post">
+        <h3>Gaming with OneEye</h3>
+        <h4>Embracing Challenges and Enhancing the Experience</h4>
+        <p>Gaming has long been a popular form of entertainment, offering immersive experiences through beautiful graphics, captivating storylines, and intricate gameplay. But what happens when you're gaming with one eye? Whether by choice or due to a vision impairment, gaming with one eye brings a unique perspective to the table.</p>
+        
+        <h4>A Different Kind of Challenge</h4>
+        <p>Gaming typically relies heavily on depth perception—being able to gauge distances and the 3D space around you. This is where vision in both eyes, or <em>binocular vision</em>, comes into play. When gaming with one eye, that depth perception is compromised, which can make certain games, particularly first-person shooters or action-packed games, more challenging.</p>
+        
+        <h4>The Role of Adaptation</h4>
+        <p>Fortunately, there are ways to adapt. Many modern video games offer customizable controls and settings that allow players to fine-tune their experience, making it more accessible. Players who game with one eye often become experts at adapting their strategies and using other in-game cues like sound or shadows.</p>
+      </div>
+      
+      <div class="blog-post">
+        <h3>The One Eye: A Symbol of Vision in Tech</h3>
+        <h4>The Eye of Focus in Coding</h4>
+        <p>In coding, the idea of a "one eye" can be viewed as a metaphor for focus and clarity. Much like how a programmer concentrates on a single line of code or a specific algorithm, the "one eye" reminds us of the intense focus required to solve complex problems.</p>
+        
+        <h4>AI and Visionary Technology</h4>
+        <p>Artificial Intelligence, as a technological field, is grounded in the concept of machine "vision." Through deep learning and neural networks, AI can "see" the world through data, interpreting patterns and making decisions with a singular, objective focus.</p>
+
+        <h4>Power and Mystery in Gaming</h4>
+        <p>In video games, the "one eye" symbol frequently appears as a powerful image, representing all-seeing vision, omniscience, or a heightened sense of perception. It often signifies a unique perspective or a special ability to see what others cannot.</p>
+      </div>
+      
+      <div class="blog-post">
+        <h3>Unraveling Quantum Computing</h3>
+        <h4>What is Quantum Computing?</h4>
+        <p>At its core, quantum computing harnesses the strange principles of quantum mechanics to perform computations impossible for traditional computers. Unlike classical bits (0s and 1s), quantum computers use qubits, which can exist in multiple states at once (superposition).</p>
+        
+        <h4>Why Quantum Computing Matters</h4>
+        <p>Quantum computing could be the key to solving some of the most pressing challenges in science and technology. Potential applications include:</p>
+        <ul>
+          <li><strong>Cryptography:</strong> Creating unbreakable encryption methods.</li>
+          <li><strong>Drug Discovery:</strong> Simulating molecular interactions to speed up the development of new drugs.</li>
+          <li><strong>Artificial Intelligence:</strong> Accelerating machine learning and creating more powerful AI models.</li>
+        </ul>
+      </div>
+
+      <div class="blog-post">
+          <h3>Quick Intro to Quantum Physics</h3>
+          <p>Quantum physics is the foundational theory that describes the behavior of matter and energy at the atomic and subatomic levels. Two of its most famous principles are the Schrödinger Equation and the Heisenberg Uncertainty Principle.</p>
+          
+          <h4>The Schrödinger Equation</h4>
+          <p>This equation is central to quantum mechanics and describes how the quantum state of a physical system changes over time. Its time-dependent form is:</p>
+          <div class="formula">
+              $i\hbar\frac{\partial}{\partial t}\Psi(x,t) = \hat{H}\Psi(x,t)$
+          </div>
+          
+          <h4>The Heisenberg Uncertainty Principle</h4>
+          <p>This principle states that there is a fundamental limit to the precision with which certain pairs of physical properties, such as position (x) and momentum (p), can be known.</p>
+          <div class="formula">
+              $\Delta x \Delta p \ge \frac{\hbar}{2}$
+          </div>
+      </div>
+      
+      <div class="blog-post">
+        <p style="text-align: center; color: var(--text-secondary);">More posts coming soon...</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 <a href="#">OneEye</a>. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    // --- Mobile Navigation Toggle ---
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    navToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        navToggle.classList.toggle('active');
+    });
+    
+    // --- Close menu when a link is clicked ---
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                navToggle.classList.remove('active');
+            }
+        });
+    });
+  </script>
+
+</body>
+</html>
